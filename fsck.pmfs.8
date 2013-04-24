@@ -1,0 +1,127 @@
+.\" -*- nroff -*-
+.\" Copyright 1993, 1994, 1995 by Theodore Ts'o.  All Rights Reserved.
+.\" Copyright 2013 Intel Corporation
+.\" This file may be copied under the terms of the GNU Public License.
+.\"
+.ds nn \fBfsck.pmfs\fP
+.TH FSCK.PMFS 8 "January 2013" ""
+.SH NAME
+fsck.pmfs \- check a pmfs file system
+.SH SYNOPSIS
+\*(nn
+[
+.B \-bfhnvyV
+]
+[
+.B \-t
+.I min-time
+]
+[
+.B \-T
+.I max-time
+]
+.B \-A
+.I phys-addr
+[
+.I device
+]
+.SH DESCRIPTION
+\*(nn is used to check the PMFS file system.
+PMFS is different from other file systems in that fsck never needs to be run;
+an ordinary mount of the file system will recover from abnormal shutdown.
+\*(nn does not perform recovery operations,
+and it does not ever write to the file system;
+it merely checks that the file system data structures are correct.
+.PP
+.I device
+is ignored, and may be specified as
+.B none
+for compatibility with fsck.
+.PP
+Note that in general it is not useful to run \*(nn
+on a mounted filesystem, as the results cannot be relied upon.
+.SH OPTIONS
+.TP
+.BI \-A " phys-addr"
+Use
+.I phys-addr
+for the physical address of the PMFS file system.
+This option is not optional.
+.TP
+.BI \-t " min-time"
+Use
+.I min-time
+for sanity checking time-stamps in the file system
+instead of January 1, 2013.
+If
+.I min-time
+is 0, a time-stamp of 0 is allowed,
+but the range of allowed values is not otherwise changed.
+To remove any minimum, use
+.BR "\-t 0 \-t 1" .
+.TP
+.BI \-T " max-time"
+Use
+.I max-time
+for sanity checking time-stamps in the file system
+instead of the current time.
+.TP
+.B \-b
+Instead of using the normal superblock, use the backup superblock.
+This option is normally used when the primary superblock has been
+corrupted.
+.\" .IP
+.\" If this option is specified
+.\" and the filesystem is not opened read-only,
+.\" \*(nn will update the primary superblock from the backup.
+.TP
+.B \-f
+Force checking even if the file system seems clean.
+This option currently has no effect, as \*(nn always does a full check.
+.TP
+.B \-h
+Print usage synopsis and exit.
+.TP
+.B \-n
+Open the filesystem read-only, and assume an answer of `no' to all
+questions.
+Allows \*(nn to be used non-interactively.
+This option may not be specified at the same time as the
+.B \-y
+option.
+This option currently has no effect, as \*(nn asks no questions.
+.TP
+.B \-v
+Verbose mode.
+The
+.B \-v
+flag can be repeated up to three times to increase verbosity.
+If
+.B \-v
+is specified, messages in the output indicating file system errors
+are tagged with the string "ERROR:" to distinguish them from the
+other output.
+.TP
+.B \-V
+Print version information and exit.
+.TP
+.B \-y
+Assume an answer of `yes' to all questions;
+allows \*(nn to be used non-interactively.
+This option may not be specified at the same time as the
+.B \-n
+option.
+This option currently has no effect, as \*(nn asks no questions.
+.SH EXIT CODE
+The exit code returned by \*(nn is the sum of the following conditions:
+.br
+\	0\	\-\ No errors
+.br
+\	4\	\-\ File system errors
+.br
+\	8\	\-\ Operational error
+.br
+\	16\	\-\ Usage or syntax error
+.br
+.SH AUTHOR
+\*(nn was written by Philip Lantz <philip.lantz@intel.com>.
